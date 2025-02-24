@@ -4,24 +4,26 @@ const Button = (props) => (
   <button onClick={props.handleClick}>{props.text}</button>
 );
 
-const incGood = (good, setGood) => {
-  console.log("Good Event handler fires, before: ", good);
-  setGood(good + 1);
-};
-const incNeutral = (neutral, setNeutral) => {
-  console.log("Neutral Event handler fires, before: ", neutral);
-  setNeutral(neutral + 1);
-};
-const incBad = (bad, setBad) => {
-  console.log("Bad Event handler fires, before: ", bad);
-  setBad(bad + 1);
-};
+
 const App = () => {
   // save clicks of each button to its own state
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
-
+  
+  const incGood = () => {
+    console.log("Good Event handler fires, before: ", good);
+    setGood(good + 1);
+  };
+  const incNeutral = () => {
+    console.log("Neutral Event handler fires, before: ", neutral);
+    setNeutral(neutral + 1);
+  };
+  const incBad = () => {
+    console.log("Bad Event handler fires, before: ", bad);
+    setBad(bad + 1);
+  };
+  
   return (
     <>
     <h1>give feedback</h1>
