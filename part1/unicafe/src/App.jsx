@@ -23,7 +23,9 @@ const App = () => {
     console.log("Bad Event handler fires, before: ", bad);
     setBad(bad + 1);
   };
-  
+  const all = good + neutral + bad;
+  const average = all ? (good - bad) / all : 0;
+  const positive = all ? (good / all) * 100 : 0;
   return (
     <>
     <h1>give feedback</h1>
@@ -34,6 +36,9 @@ const App = () => {
     <p>good {good}</p>
     <p>neutral {neutral}</p>
     <p>bad {bad}</p>
+    <p>all {all}</p>
+    <p>average {average}</p>
+    <p>positive {positive}%</p>
     </>
   );
 };
