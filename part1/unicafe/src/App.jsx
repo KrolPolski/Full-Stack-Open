@@ -4,15 +4,15 @@ const Button = (props) => (
   <button onClick={props.handleClick}>{props.text}</button>
 );
 
-const incGood = (good) => {
+const incGood = (good, setGood) => {
   console.log("Good Event handler fires, before: ", good);
   setGood(good + 1);
 };
-const incNeutral = () => {
+const incNeutral = (neutral, setNeutral) => {
   console.log("Neutral Event handler fires, before: ", neutral);
   setNeutral(neutral + 1);
 };
-const incBad = () => {
+const incBad = (bad, setBad) => {
   console.log("Bad Event handler fires, before: ", bad);
   setBad(bad + 1);
 };
@@ -24,9 +24,14 @@ const App = () => {
 
   return (
     <>
-      <Button handleClick={() => incGood(good)} text="good" />
-      <Button handleClick={() => incNeutral()} text="neutral" />
-      <Button handleClick={() => incBad()} text="bad" />
+    <h1>give feedback</h1>
+      <Button handleClick={() => incGood(good, setGood)} text="good" />
+      <Button handleClick={() => incNeutral(neutral, setNeutral)} text="neutral" />
+      <Button handleClick={() => incBad(bad, setBad)} text="bad" />
+    <h1>statistics</h1>
+    <p>good {good}</p>
+    <p>neutral {neutral}</p>
+    <p>bad {bad}</p>
     </>
   );
 };
