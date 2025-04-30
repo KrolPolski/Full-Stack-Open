@@ -3,10 +3,18 @@ import { useState } from 'react'
 const App = () => {
   const [persons, setPersons] = useState([
     { key: 'Arto Hellas',
-      name: 'Arto Hellas' }
+      name: 'Arto Hellas',
+      number: '040-123456'
+    },
+    {
+      key: 'Ada Lovelace', 
+      name: 'Ada Lovelace',
+      number: '39-44-5323523'
+    }
   ]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [newFilter, setNewFilter] = useState('')
   const addName = (event) => {
     event.preventDefault()
 
@@ -34,9 +42,18 @@ const App = () => {
     console.log(event.target.value)
     setNewNumber(event.target.value)
   }
+  const handleFilter = (event) => {
+    console.log(event.target.value)
+    setNewFilter(event.target.value)
+  }
+  const personsToShow = persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()))
   return (
     <div>
       <h2>Phonebook</h2>
+      filter shown with <input 
+                        value={newFilter}
+                        onChange={handleFilter}/>
+      <h2>Add a new</h2>
       <form onSubmit={addName}>
         <div>
           name: <input 
@@ -54,7 +71,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <div>{persons.map((person) => (
+      <div>{personsToShow.map((person) => (
           <p key={person.key}>{person.name} {person.number}</p>))}</div>
       {/* <div>debug: {newName}</div> */}
     </div>
