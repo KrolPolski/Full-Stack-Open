@@ -8,6 +8,13 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const addName = (event) => {
     event.preventDefault()
+
+    const nameExists = persons.some(person => person.name === newName)
+    if (nameExists)
+    {
+      alert(`${newName} is already in the phonebook`)
+      return
+    }
     console.log("button clicked", event.target)
     const nameObject = {
       key: newName,
