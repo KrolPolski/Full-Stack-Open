@@ -57,7 +57,11 @@ const App = () => {
   
   const handleDelete = (id) => {
 	console.log("We want to delete something with id of ", id)
-	
+	personService
+		.deleteEntry(id)
+	.then(() => {
+		setPersons(persons.filter(person => person.id !== id))
+	})
   }
   return (
     <div>
