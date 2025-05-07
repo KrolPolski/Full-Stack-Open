@@ -25,7 +25,15 @@ const App = () => {
     const nameExists = persons.some(person => person.name === newName)
     if (nameExists)
     {
-      alert(`${newName} is already in the phonebook`)
+      if (window.confirm(`${newName} is already in the phonebook. Do you want to replace the old number with a new one?`))
+	  {
+		const updateTarget = persons.find(person => person.name === newName)
+		console.log("Update target is ", updateTarget)
+		updateTarget.number = newNumber
+		personService.update(updateTarget.id, updateTarget)
+		setNewName('')
+		setNewNumber('')
+	  }
       return
     }
     console.log("button clicked", event.target)
