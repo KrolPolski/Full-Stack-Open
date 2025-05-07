@@ -55,13 +55,23 @@ const App = () => {
     setNewFilter(event.target.value)
   }
   
-  const handleDelete = (id) => {
+  const handleDelete = (id, targetName) => {
 	console.log("We want to delete something with id of ", id)
+	if (window.confirm(`Are you sure you want to delete ${targetName}?`))
+	{
 	personService
 		.deleteEntry(id)
 	.then(() => {
 		setPersons(persons.filter(person => person.id !== id))
 	})
+	.catch(error => {
+        alert('Failed to delete the contact. It may have already been removed from the server.')
+        setPersons(persons.filter(person => person.id !== id))
+  })}
+  	else
+	{
+		console.log("No delete confirmation obtained, aborting delete")
+	}
   }
   return (
     <div>
