@@ -55,6 +55,10 @@ const App = () => {
     setNewFilter(event.target.value)
   }
   
+  const handleDelete = (id) => {
+	console.log("We want to delete something with id of ", id)
+	
+  }
   return (
     <div>
       <h2>Phonebook</h2>
@@ -70,7 +74,8 @@ const App = () => {
         handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
       <Filter persons={persons}
-              newFilter={newFilter}/>
+              newFilter={newFilter}
+			  handleDelete={handleDelete}/>
       {/* <div>debug: {newName}</div> */}
     </div>
   )
