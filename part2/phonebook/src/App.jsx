@@ -3,11 +3,13 @@ import axios from 'axios'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import personService from './services/persons'
+import Notification from './components/Notification'
 const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [persons, setPersons] = useState([])
+  const [notificationMessage, setNotification] = useState(null)
   const hook = () => {
     console.log('effect')
     axios
@@ -48,7 +50,11 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        setNotification(`Added ${returnedPerson.name}`)        
       })
+      .then(setTimeout(() => {
+        setNotification(null)
+      }, 5000))
   }
   const handleNameChange = (event) => {
     console.log(event.target.value)
@@ -83,6 +89,7 @@ const App = () => {
   }
   return (
     <div>
+      <Notification message={notificationMessage}/>
       <h2>Phonebook</h2>
       filter shown with <input 
                         value={newFilter}
