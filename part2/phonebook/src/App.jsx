@@ -10,6 +10,7 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('')
   const [persons, setPersons] = useState([])
   const [notificationMessage, setNotification] = useState(null)
+  const [notificationType, setNotificationType] = useState('success')
   const hook = () => {
     console.log('effect')
     axios
@@ -18,25 +19,48 @@ const App = () => {
       console.log('promise fulfilled')
       setPersons(response.data)
       })
+      .catch(error => {
+        setNotification('Unable to retrieve phone directory data')
+        setNotificationType('error')
+        setTimeout(() => {setNotification(null)}, 5000)
+      })
     }
     useEffect(hook, [])
     console.log('render', persons.length, 'persons')
   const addName = (event) => {
     event.preventDefault()
-
     const nameExists = persons.some(person => person.name === newName)
     if (nameExists)
     {
       if (window.confirm(`${newName} is already in the phonebook. Do you want to replace the old number with a new one?`))
-	  {
-		const updateTarget = persons.find(person => person.name === newName)
-		console.log("Update target is ", updateTarget)
-		updateTarget.number = newNumber
-		personService.update(updateTarget.id, updateTarget)
-		setNewName('')
-		setNewNumber('')
-	  }
-      return
+      {
+        console.log("Confirmation to update received")
+        const updateTarget = persons.find(person => person.name === newName)
+        console.log("Update target is ", updateTarget)
+        updateTarget.number = newNumber
+        personService.update(updateTarget.id, updateTarget)
+        .then(updateTarget => {
+          setNewName('')
+          setNewNumber('')
+          setNotification(`${updateTarget.name}'s phone number has been successfully updated.`)
+          setNotificationType('success')
+          setTimeout(() => {setNotification(null)}, 5000)
+        })
+        .catch(updateTarget => {
+          setNotification(`${newName}'s phone number could not be updated because it has already been removed from the server.`)
+          setNotificationType('error')
+          setTimeout(() => {setNotification(null)}, 5000)
+        })
+        return
+      }
+      else
+      {
+        console.log("Update operation unconfirmed.")
+        setNotification(`${newName}'s record was not updated.`)
+        setNotificationType('error')
+        setTimeout(() => {setNotification(null)}, 5000)
+        return
+      }
     }
     console.log("button clicked", event.target)
     const nameObject = {
@@ -50,11 +74,16 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
-        setNotification(`Added ${returnedPerson.name}`)        
+        setNotification(`Added ${returnedPerson.name}`)
+        setNotificationType('success') 
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)       
       })
-      .then(setTimeout(() => {
-        setNotification(null)
-      }, 5000))
+      .catch(error => {
+        setNotification(`Unable to save phone directory data for ${nameObject.name}`)
+        setNotificationType('error')
+        setTimeout(() => {setNotification(null)}, 5000)})
   }
   const handleNameChange = (event) => {
     console.log(event.target.value)
@@ -77,10 +106,15 @@ const App = () => {
 		.deleteEntry(id)
 	.then(() => {
 		setPersons(persons.filter(person => person.id !== id))
+    setNotification(`${targetName} has been successfully deleted from the phonebook.`)
+    setNotificationType('success')
+    setTimeout(() => setNotification(null), 5000)
 	})
 	.catch(error => {
-        alert('Failed to delete the contact. It may have already been removed from the server.')
+        setNotification(`Failed to delete ${targetName} from the phonebook. It may have already been removed from the server.`)
+        setNotificationType('error')
         setPersons(persons.filter(person => person.id !== id))
+        setTimeout (() => setNotification(null), 5000)
   })}
   	else
 	{
@@ -89,7 +123,7 @@ const App = () => {
   }
   return (
     <div>
-      <Notification message={notificationMessage}/>
+      <Notification message={notificationMessage} type={notificationType}/>
       <h2>Phonebook</h2>
       filter shown with <input 
                         value={newFilter}
