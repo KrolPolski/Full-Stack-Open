@@ -35,6 +35,10 @@ function App() {
         });
     }
   }, [matchCountries]);
+  const linkCountry = (countryname) => {
+	console.log(countryname)
+	getCountriesService.getCountry(countryname).then((countryData => setFoundCountry(countryData)));
+  }
   const PrintCountries = () => {
     if (matchCountries.length > 10)
       return <div>Too many matches, specify another filter</div>;
@@ -61,7 +65,7 @@ function App() {
       );
     } else
       return matchCountries.map((country) => (
-        <div key={country.cca3}>{country.name.common}</div>
+        <div key={country.cca3}>{country.name.common} <button onClick={() => linkCountry(country.name.common)}>Show</button></div>
       ));
   };
   return (
