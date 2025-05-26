@@ -44,8 +44,6 @@ function App() {
               console.log(weatherData);
             });
         });
-
-      //then(getCountriesService.getWeather(foundCountry.capitalInfo.latlng[0], foundCountry.capitalInfo.latlng[1]));
     }
   }, [matchCountries]);
   const linkCountry = (countryname) => {
@@ -57,12 +55,12 @@ function App() {
   const PrintWeather = () => {
     if (countryWeather) {
       const icon = countryWeather.weather[0].icon;
-	  console.log("icon", icon)
+      console.log("icon", icon);
       const iconURL = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-	  console.log(iconURL);
-	  return (
+      console.log(iconURL);
+      return (
         <div>
-			<h2>Weather in {foundCountry.capital}</h2>
+          <h2>Weather in {foundCountry.capital}</h2>
           <p>
             Temperature{" "}
             {countryWeather && (countryWeather.main.temp - 273.15).toFixed(2)}{" "}
