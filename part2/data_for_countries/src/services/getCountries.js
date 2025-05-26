@@ -12,4 +12,13 @@ const getCountry = (countryName) => {
   return request.then(response => response.data)
 }
 
-export default { getAll, getCountry}
+const getWeather = (latitude, longitude) =>
+{	
+	const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
+	const weatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`
+	console.log(weatherURL);
+	const request = axios.get(weatherURL)
+	return request.then(response => response.data)
+}
+
+export default { getAll, getCountry, getWeather}

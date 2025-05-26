@@ -6,7 +6,7 @@ function App() {
   const [allCountries, setAllCountries] = useState([]);
   const [matchCountries, setMatchCountries] = useState([]);
   const [foundCountry, setFoundCountry] = useState(null);
-
+  const [countryWeather, setCountryWeather] = useState(null);
   useEffect(() => {
     getCountriesService.getAll().then((initialData) => {
       setAllCountries(initialData);
@@ -28,17 +28,52 @@ function App() {
   };
   useEffect(() => {
     if (matchCountries.length == 1) {
+      let latitude, longitude;
+      let weather;
       getCountriesService
         .getCountry(matchCountries[0].name.common)
         .then((countryData) => {
           setFoundCountry(countryData);
+          [latitude, longitude] = countryData.capitalInfo.latlng;
+          console.log(countryData);
+          console.log(latitude, longitude);
+          getCountriesService
+            .getWeather(latitude, longitude)
+            .then((weatherData) => {
+              setCountryWeather(weatherData);
+              console.log(weatherData);
+            });
         });
+
+      //then(getCountriesService.getWeather(foundCountry.capitalInfo.latlng[0], foundCountry.capitalInfo.latlng[1]));
     }
   }, [matchCountries]);
   const linkCountry = (countryname) => {
-	console.log(countryname)
-	getCountriesService.getCountry(countryname).then((countryData => setFoundCountry(countryData)));
-  }
+    console.log(countryname);
+    getCountriesService
+      .getCountry(countryname)
+      .then((countryData) => setFoundCountry(countryData));
+  };
+  const PrintWeather = () => {
+    if (countryWeather) {
+      const icon = countryWeather.weather[0].icon;
+	  console.log("icon", icon)
+      const iconURL = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+	  console.log(iconURL);
+	  return (
+        <div>
+			<h2>Weather in {foundCountry.capital}</h2>
+          <p>
+            Temperature{" "}
+            {countryWeather && (countryWeather.main.temp - 273.15).toFixed(2)}{" "}
+            Celsius
+          </p>
+          <img src={iconURL} />
+          <p>Wind {countryWeather && countryWeather.wind.speed} m/s</p>
+        </div>
+      );
+    } else return <p>No weather data returned from API</p>;
+  };
   const PrintCountries = () => {
     if (matchCountries.length > 10)
       return <div>Too many matches, specify another filter</div>;
@@ -61,11 +96,15 @@ function App() {
               alt={foundCountry.flags.alt}
             />
           </div>
+          <PrintWeather />
         </div>
       );
     } else
       return matchCountries.map((country) => (
-        <div key={country.cca3}>{country.name.common} <button onClick={() => linkCountry(country.name.common)}>Show</button></div>
+        <div key={country.cca3}>
+          {country.name.common}{" "}
+          <button onClick={() => linkCountry(country.name.common)}>Show</button>
+        </div>
       ));
   };
   return (
